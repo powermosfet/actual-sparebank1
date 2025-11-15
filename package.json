@@ -1,0 +1,16 @@
+{
+  "name": "actual-sparebank1",
+  "version": "0.1.0",
+  "description": "Actual Budget integration for SpareBank 1",
+  "main": "main.js",
+  "scripts": {
+    "build": "npm install"
+  },
+  "bin": {
+    "actual-sparebank1": "main.js"
+  },
+  "dependencies": {
+    "@actual-app/api": "^25.11.0",
+    "oauth": "^0.10.2"
+  }
+}
