@@ -16,6 +16,9 @@
       version = "0.1.0";
       src = ./.;
       npmDepsHash = "sha256-uwOJt6bAcKAbB9pr6Thl9wipN92IsAUlKqAA2paPiSM=";
+      meta = {
+        mainProgram = "actual-sparebank1";
+      };
     };
   };
 }
