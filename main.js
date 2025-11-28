@@ -216,6 +216,7 @@ const makeTransaction = (payees, account) => (bankTx) => {
   const account = opts.account? config.accounts[opts.account] : null;
 
   await api.init({
+    dataDir: requireEnv('ACTUAL_DATA_DIR'),
     serverURL: requireEnv('ACTUAL_URL'),
     password: requireEnv('ACTUAL_PW'),
   });
