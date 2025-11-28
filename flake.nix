@@ -15,7 +15,7 @@
       pname = "actual-sparebank1";
       version = "0.1.0";
       src = ./.;
-      npmDepsHash = "sha256-JYW+xRXII+RzZJ9B7na8hmeJLkOY6th+Agfs2K+43AY=";
+      npmDepsHash = "sha256-uwOJt6bAcKAbB9pr6Thl9wipN92IsAUlKqAA2paPiSM=";
     };
   };
 }

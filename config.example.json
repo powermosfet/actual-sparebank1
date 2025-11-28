@@ -1,0 +1,11 @@
+{
+  "accessToken": "deadbeef",
+  "refreshToken": "deadbeef",
+  "accounts": {
+    "32485432145": {
+      "bankKey": "sdfkjhsdkfjhsdkfjhsfdkjh",
+      "actualId": "asdad-234-234234324-234234234",
+      "name": "Savings account"
+    }
+  }
+}
