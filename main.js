@@ -237,12 +237,18 @@ const makeTransaction = (payees, account) => (bankTx) => {
       if(account) {
         console.error("Importing from", account.name);
         const { transactions } = await sparebank1Transactions({ account, startDate, endDate });
-        await api.importTransactions(account.actualId, transactions.map(makeTransaction(payees, account)));
+        const actualTransactions = transactions
+          .filter(({bookingStatus}) => bookingStatus === 'BOOKED' )
+          .map(makeTransaction(payees, account));
+        await api.importTransactions(account.actualId, actualTransactions);
       } else {
         for (const [accountNumber, account] of Object.entries(config.accounts)) {
           console.error("Importing from", account.name);
           const { transactions } = await sparebank1Transactions({ account, startDate, endDate });
-          await api.importTransactions(account.actualId, transactions.map(makeTransaction(payees, account)));
+          const actualTransactions = transactions
+            .filter(({bookingStatus}) => bookingStatus === 'BOOKED' )
+            .map(makeTransaction(payees, account));
+          await api.importTransactions(account.actualId, actualTransactions);
         }
       }
       break;
