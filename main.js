@@ -188,6 +188,16 @@ const makeTransaction = (payees, account) => (bankTx) => {
     tx.payee_name = bankTx.cleanedDescription;
     tx.imported_payee = bankTx.description;
   }
+
+  if(bankTx.bookingStatus == 'PENDING') {
+    delete tx.payee;
+    delete tx.payee_name;
+    delete tx.imported_payee;
+    tx.cleared = false;
+  } else {
+    tx.cleared = true;
+  }
+
   return tx;
 };
 
@@ -238,7 +248,6 @@ const makeTransaction = (payees, account) => (bankTx) => {
         console.error("Importing from", account.name);
         const { transactions } = await sparebank1Transactions({ account, startDate, endDate });
         const actualTransactions = transactions
-          .filter(({bookingStatus}) => bookingStatus === 'BOOKED' )
           .map(makeTransaction(payees, account));
         await api.importTransactions(account.actualId, actualTransactions);
       } else {
@@ -246,7 +255,6 @@ const makeTransaction = (payees, account) => (bankTx) => {
           console.error("Importing from", account.name);
           const { transactions } = await sparebank1Transactions({ account, startDate, endDate });
           const actualTransactions = transactions
-            .filter(({bookingStatus}) => bookingStatus === 'BOOKED' )
             .map(makeTransaction(payees, account));
           await api.importTransactions(account.actualId, actualTransactions);
         }
