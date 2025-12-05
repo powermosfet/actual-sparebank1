@@ -189,10 +189,11 @@ const makeTransaction = (payees, account) => (bankTx) => {
     tx.imported_payee = bankTx.description;
   }
 
-  if(bankTx.bookingStatus == 'PENDING') {
+  if(bankTx.source == 'RECENT') {
     delete tx.payee;
     delete tx.payee_name;
     delete tx.imported_payee;
+    tx.notes = bankTx.description;
     tx.cleared = false;
   } else {
     tx.cleared = true;
@@ -225,24 +226,36 @@ const makeTransaction = (payees, account) => (bankTx) => {
 
   const account = opts.account? config.accounts[opts.account] : null;
 
-  await api.init({
-    dataDir: requireEnv('ACTUAL_DATA_DIR'),
-    serverURL: requireEnv('ACTUAL_URL'),
-    password: requireEnv('ACTUAL_PW'),
-  });
-
-  await api.downloadBudget(requireEnv('ACTUAL_BUDGET_ID'));
-
   switch(parsedOptions.args[0] || 'budget-accounts') {
     case 'budget-accounts':
+      await api.init({
+        dataDir: requireEnv('ACTUAL_DATA_DIR'),
+        serverURL: requireEnv('ACTUAL_URL'),
+        password: requireEnv('ACTUAL_PW'),
+      });
+      await api.downloadBudget(requireEnv('ACTUAL_BUDGET_ID'));
       console.log(await api.getAccounts());
+      await api.shutdown();
       break;
 
     case 'budget-payees':
+      await api.init({
+        dataDir: requireEnv('ACTUAL_DATA_DIR'),
+        serverURL: requireEnv('ACTUAL_URL'),
+        password: requireEnv('ACTUAL_PW'),
+      });
+      await api.downloadBudget(requireEnv('ACTUAL_BUDGET_ID'));
       console.log(await api.getPayees());
+      await api.shutdown();
       break;
 
     case 'import':
+      await api.init({
+        dataDir: requireEnv('ACTUAL_DATA_DIR'),
+        serverURL: requireEnv('ACTUAL_URL'),
+        password: requireEnv('ACTUAL_PW'),
+      });
+      await api.downloadBudget(requireEnv('ACTUAL_BUDGET_ID'));
       const payees = await api.getPayees();
       if(account) {
         console.error("Importing from", account.name);
@@ -259,6 +272,7 @@ const makeTransaction = (payees, account) => (bankTx) => {
           await api.importTransactions(account.actualId, actualTransactions);
         }
       }
+      await api.shutdown();
       break;
 
     case 'bank-auth':
@@ -280,6 +294,4 @@ const makeTransaction = (payees, account) => (bankTx) => {
       }
       break;
   }
-
-  await api.shutdown();
 })();
