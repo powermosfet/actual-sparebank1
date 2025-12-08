@@ -184,7 +184,7 @@ const makeTransaction = (payees, account) => (bankTx) => {
 
   if(remoteAccount) {
     return makeTransfer(payees, remoteAccount, bankTx, tx);
-  } else if ([ 'R_714' ].includes(bankTx.typeCode) && bankTx.bookingStatus == 'BOOKED') {
+  } else if ([ 'R_714', 'R_710', 'R_946' ].includes(bankTx.typeCode) && bankTx.bookingStatus == 'BOOKED') {
     return makePurchase(bankTx, tx);
   }
 
