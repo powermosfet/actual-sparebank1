@@ -177,29 +177,35 @@ const makeTransaction = (payees, account) => (bankTx) => {
     account: account.actualId,
     date: (new Date(bankTx.date)).toLocaleDateString('sv-SE'),
     amount: Math.round(bankTx.amount * 100),
+    cleared: false,
   };
 
   const remoteAccount = config.accounts[bankTx.remoteAccountNumber];
 
   if(remoteAccount) {
-    const transferPayee = payees.find((p) => p.transfer_acct === remoteAccount.actualId);
-    tx.payee = transferPayee.id;
-  } else {
-    tx.payee_name = bankTx.cleanedDescription;
-    tx.imported_payee = bankTx.description;
+    return makeTransfer(payees, remoteAccount, bankTx, tx);
+  } else if ([ 'R_714' ].includes(bankTx.typeCode) && bankTx.bookingStatus == 'BOOKED') {
+    return makePurchase(bankTx, tx);
   }
 
-  if(bankTx.source == 'RECENT') {
-    delete tx.payee;
-    delete tx.payee_name;
-    delete tx.imported_payee;
-    tx.notes = bankTx.description;
-    tx.cleared = false;
-  } else {
-    tx.cleared = true;
-  }
+  return { ...tx, notes: bankTx.description };
+};
 
-  return tx;
+const makePurchase = (bankTx, actualTx) => {
+  return {
+    ...actualTx,
+    payee_name: bankTx.cleanedDescription,
+    imported_payee: bankTx.description,
+  };
+};
+
+const makeTransfer = (payees, remoteAccount, bankTx, actualTx) => {
+  return {
+    ...actualTx,
+    payee: payees
+      .find((p) => p.transfer_acct === remoteAccount.actualId)
+      .id,
+  };
 };
 
 (async () => {
