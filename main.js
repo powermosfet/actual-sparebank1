@@ -238,6 +238,7 @@ const makeTransfer = (payees, remoteAccount, bankTx, actualTx) => {
         dataDir: requireEnv('ACTUAL_DATA_DIR'),
         serverURL: requireEnv('ACTUAL_URL'),
         password: requireEnv('ACTUAL_PW'),
+        verbose: false,
       });
       await api.downloadBudget(requireEnv('ACTUAL_BUDGET_ID'));
       console.log(await api.getAccounts());
@@ -249,6 +250,7 @@ const makeTransfer = (payees, remoteAccount, bankTx, actualTx) => {
         dataDir: requireEnv('ACTUAL_DATA_DIR'),
         serverURL: requireEnv('ACTUAL_URL'),
         password: requireEnv('ACTUAL_PW'),
+        verbose: false,
       });
       await api.downloadBudget(requireEnv('ACTUAL_BUDGET_ID'));
       console.log(await api.getPayees());
@@ -260,6 +262,7 @@ const makeTransfer = (payees, remoteAccount, bankTx, actualTx) => {
         dataDir: requireEnv('ACTUAL_DATA_DIR'),
         serverURL: requireEnv('ACTUAL_URL'),
         password: requireEnv('ACTUAL_PW'),
+        verbose: false,
       });
       await api.downloadBudget(requireEnv('ACTUAL_BUDGET_ID'));
       const payees = await api.getPayees();
