@@ -191,7 +191,7 @@ const makeTransaction = (payees, account) => (bankTx) => {
     return remoteAccount? makeTransfer(payees, remoteAccount, bankTx, tx) : null;
   } else if ([ 'R_260' ].includes(bankTx.typeCode)) {
     // This is supposed to be a transfer, but we don't have remoteAccount yet
-    if(source === 'RECENT') {
+    if(bankTx.source === 'RECENT') {
       return null;
     }
   } else if ([ 'R_714', 'R_710', 'R_946' ].includes(bankTx.typeCode) && bankTx.bookingStatus == 'BOOKED') {
