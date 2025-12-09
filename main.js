@@ -173,12 +173,17 @@ const sparebank1Transactions = async ({ account, startDate, endDate }) => {
 // Actual Budget
 
 const makeTransaction = (payees, account) => (bankTx) => {
+  const date = (new Date(bankTx.date)).toLocaleDateString('sv-SE');
   const tx = {
     account: account.actualId,
-    date: (new Date(bankTx.date)).toLocaleDateString('sv-SE'),
+    date: date,
     amount: Math.round(bankTx.amount * 100),
     cleared: false,
   };
+
+  if(bankTx.nonUniqueId.replace(/0/g, '')) {
+    tx.id = date.substr(0, 8) + bankTx.nonUniqueId;
+  }
 
   const remoteAccount = config.accounts[bankTx.remoteAccountNumber];
 
