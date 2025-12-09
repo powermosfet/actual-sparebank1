@@ -183,7 +183,12 @@ const makeTransaction = (payees, account) => (bankTx) => {
   const remoteAccount = config.accounts[bankTx.remoteAccountNumber];
 
   if(remoteAccount) {
-    return makeTransfer(payees, remoteAccount, bankTx, tx);
+    return remoteAccount? makeTransfer(payees, remoteAccount, bankTx, tx) : null;
+  } else if ([ 'R_260' ].includes(bankTx.typeCode)) {
+    // This is supposed to be a transfer, but we don't have remoteAccount yet
+    if(source === 'RECENT') {
+      return null;
+    }
   } else if ([ 'R_714', 'R_710', 'R_946' ].includes(bankTx.typeCode) && bankTx.bookingStatus == 'BOOKED') {
     return makePurchase(bankTx, tx);
   }
@@ -270,14 +275,16 @@ const makeTransfer = (payees, remoteAccount, bankTx, actualTx) => {
         console.error("Importing from", account.name);
         const { transactions } = await sparebank1Transactions({ account, startDate, endDate });
         const actualTransactions = transactions
-          .map(makeTransaction(payees, account));
+          .map(makeTransaction(payees, account))
+          .filter(Boolean);
         await api.importTransactions(account.actualId, actualTransactions);
       } else {
         for (const [accountNumber, account] of Object.entries(config.accounts)) {
           console.error("Importing from", account.name);
           const { transactions } = await sparebank1Transactions({ account, startDate, endDate });
           const actualTransactions = transactions
-            .map(makeTransaction(payees, account));
+            .map(makeTransaction(payees, account))
+            .filter(Boolean);
           await api.importTransactions(account.actualId, actualTransactions);
         }
       }
