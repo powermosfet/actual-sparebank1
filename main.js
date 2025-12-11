@@ -194,7 +194,7 @@ const makeTransaction = (payees, account) => (bankTx) => {
     if(bankTx.source === 'RECENT') {
       return null;
     }
-  } else if ([ 'R_714', 'R_710', 'R_946' ].includes(bankTx.typeCode) && bankTx.bookingStatus == 'BOOKED') {
+  } else if (bankTx.bookingStatus == 'BOOKED') {
     return makePurchase(bankTx, tx);
   }
 
