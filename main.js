@@ -189,7 +189,7 @@ const makeTransaction = (payees, account) => (bankTx) => {
 
   if(remoteAccount) {
     return remoteAccount? makeTransfer(payees, remoteAccount, bankTx, tx) : null;
-  } else if ([ 'R_260' ].includes(bankTx.typeCode)) {
+  } else if ([ 'R_260', 'R_914' ].includes(bankTx.typeCode)) {
     // This is supposed to be a transfer, but we don't have remoteAccount yet
     if(bankTx.source === 'RECENT') {
       return null;
